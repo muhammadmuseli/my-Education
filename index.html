@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أفق | منصة الدروس الذكية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">أ</span><span>أُفُق<span class="dot">.</span></span></a>
+      <nav class="nav-list">
+        <a class="nav-item active" href="#home"><span>⌂</span>الرئيسية</a>
+        <a class="nav-item" href="#library"><span>▣</span>مكتبتي <b id="libraryCount">12</b></a>
+        <a class="nav-item" href="#translate"><span>✦</span>الترجمة الذكية</a>
+        <a class="nav-item" href="#study"><span>◈</span>مساعد الدراسة</a>
+        <a class="nav-item" href="#archive"><span>◷</span>الأرشيف</a>
+      </nav>
+      <div class="side-bottom">
+        <button class="nav-item settings-link" id="openSettings"><span>⚙</span>الإعدادات</button>
+        <div class="profile"><div class="avatar">م</div><div><strong>محمد أحمد</strong><small>الخطة المجانية</small></div><button aria-label="المزيد">⋮</button></div>
+      </div>
+    </aside>
+
+    <main>
+      <header>
+        <button class="menu" id="menuBtn">☰</button>
+        <div><p class="eyebrow">السبت، ٢٦ يوليو</p><h1>مرحبًا، محمد <span>👋</span></h1></div>
+        <div class="header-actions"><button class="icon-btn">⌕</button><button class="icon-btn notification">♧<i></i></button><button class="add-lesson" id="uploadTrigger">+ <span>إضافة درس</span></button></div>
+      </header>
+
+      <section class="hero" id="home">
+        <div class="hero-copy"><span class="pill">✦ مدعوم بالذكاء الاصطناعي</span><h2>حوّل دروسك الألمانية<br>إلى معرفة <em>بلا حدود.</em></h2><p>ارفع الدرس ودع أُفُق يترجمه فورًا إلى العربية والإنجليزية، مع الحفاظ على المعنى والسياق التعليمي.</p><button class="light-button" id="heroUpload">ابدأ برفع درس <span>←</span></button></div>
+        <div class="hero-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="glow"></div><div class="language-card arabic">أ</div><div class="language-card english">A</div><div class="language-card german">Ä</div><div class="sparkle s1">✦</div><div class="sparkle s2">✧</div></div>
+      </section>
+
+      <section class="overview" id="lessons">
+        <div class="section-title"><div><p class="eyebrow">نظرة عامة</p><h2>دروسك الأخيرة</h2></div><a href="#archive">عرض الكل <span>←</span></a></div>
+        <div class="lesson-grid">
+          <a class="lesson-card open-lesson" href="lesson.html?id=javascript&amp;demo=1" target="_blank"><div class="thumb code-thumb"><span>JS</span><i>{ }</i></div><div class="lesson-info"><div class="lesson-meta"><span class="tag green">JavaScript</span><span>منذ ساعتين</span></div><h3>أساسيات JavaScript</h3><p>Variables, functions &amp; DOM</p><div class="card-bottom"><span class="translated">✓ جاهز للمراجعة</span><span class="play">↖</span></div></div></a>
+          <a class="lesson-card open-lesson" href="lesson.html?id=network&amp;demo=1" target="_blank"><div class="thumb network-thumb"><span>NET</span><i>◌</i></div><div class="lesson-info"><div class="lesson-meta"><span class="tag orange">الشبكات</span><span>أمس</span></div><h3>مقدمة في شبكات الحاسوب</h3><p>IP, DNS &amp; TCP/IP</p><div class="card-bottom"><span class="translated">✓ جاهز للمراجعة</span><span class="play">↖</span></div></div></a>
+          <a class="lesson-card open-lesson" href="lesson.html?id=python&amp;demo=1" target="_blank"><div class="thumb python-thumb"><span>PY</span><i>⌘</i></div><div class="lesson-info"><div class="lesson-meta"><span class="tag blue">Python</span><span>١٨ يوليو</span></div><h3>البرمجة كائنية التوجه</h3><p>Classes &amp; objects</p><div class="card-bottom"><span class="pending">◌ بحاجة لتمارين</span><span class="play">↖</span></div></div></a>
+        </div>
+      </section>
+
+      <section class="library-section" id="library">
+        <div class="section-title"><div><p class="eyebrow">مكتبة الدروس</p><h2>كل دروسي</h2></div><span class="library-hint">اضغط على أي درس لفتحه في نافذة جديدة</span></div>
+        <div class="library-grid" id="libraryList"></div>
+      </section>
+
+      <section class="translator" id="translate">
+        <div class="section-title"><div><p class="eyebrow">مساحة العمل</p><h2>ترجمة درس جديد</h2></div><button class="connection" id="connectionStatus"><span></span> Gemini غير متصل</button></div>
+        <div class="translate-box">
+          <div class="source-pane"><div class="pane-heading"><span>النص الأصلي</span><b>DE</b></div><textarea id="sourceText" lang="de" placeholder="ألصق نص الدرس الألماني هنا أو ارفع ملفًا..."></textarea><div id="filePreview" class="file-preview" hidden></div><div class="file-tools"><label class="upload-mini" for="fileInput">⌁ رفع PDF أو صورة</label><button class="file-action" id="summarizeBtn">تلخيص</button><button class="file-action" id="explainBtn">شرح مبسّط</button></div></div>
+          <div class="translate-divider"><button id="translateBtn" title="ترجمة">✦</button></div>
+          <div class="result-pane"><div class="pane-heading"><span>الترجمة</span><div class="language-tabs"><button class="lang-tab active" data-lang="ar">العربية</button><button class="lang-tab" data-lang="en">English</button></div></div><div id="translationResult" class="translation-result"><div class="empty-result"><span>✦</span><p>ستظهر ترجمتك هنا</p><small>أضف النص ثم اختر اللغة المطلوبة</small></div></div></div>
+        </div>
+      </section>
+
+      <section class="study-section" id="study">
+        <div class="section-title"><div><p class="eyebrow">تعلم أذكى في IT</p><h2>مساعدك الدراسي</h2></div></div>
+        <div class="study-grid">
+          <article class="idea-panel">
+            <div class="idea-intro"><span class="idea-icon">✦</span><div><h3>اقتراحات حسب اسم الدرس</h3><p>اكتب عنوان الدرس لتحصل على تمارين وشرح إضافي مناسبين له.</p></div></div>
+            <div class="topic-form"><input id="lessonTitle" placeholder="اكتب ما تحتاجه: مثال تعلم الشبكات أو تمارين Python"><button id="ideasBtn">اقترح لي</button></div>
+            <div id="pageSuggestions" class="page-suggestions"></div>
+            <div id="ideasResult" class="ideas-result"><div class="idea-empty"><span>⌘</span><p>من البرمجة إلى الشبكات والأمن السيبراني</p><small>سيبني المساعد مسارًا قصيرًا لتثبيت فهمك.</small></div></div>
+          </article>
+          <article class="chat-panel">
+            <div class="chat-heading"><div class="ai-avatar">✦</div><div><h3>مساعد IT</h3><p><i></i> جاهز لمساعدتك</p></div><button id="clearChat" title="محادثة جديدة">↻</button></div>
+            <div class="chat-messages" id="chatMessages"><div class="message ai">مرحبًا! أنا مساعدك الدراسي في IT. اسألني عن البرمجة، الشبكات، قواعد البيانات أو أي موضوع في دروسك.<small>الآن</small></div></div>
+            <div class="chat-input"><textarea id="chatInput" rows="1" placeholder="اسأل عن موضوع دراسي…"></textarea><button id="sendChat" title="إرسال">↑</button></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <input type="file" id="fileInput" accept="application/pdf,image/*,.txt" hidden>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="settings-modal"><div class="modal-head"><div><p class="eyebrow">إعدادات المساعد</p><h2>تعليماتك الخاصة</h2></div><button class="close" value="cancel">×</button></div><p class="help">مفتاح Gemini محفوظ بأمان في ملف <code>.env</code> على السيرفر ولا يظهر في الموقع. اكتب هنا كيف تريد أن يشرح لك المساعد الدروس.</p><label>Prompt شخصي<textarea id="customPrompt" rows="5" placeholder="مثال: اشرح لي بالعربية البسيطة، ركّز على أمثلة IT العملية، ثم اقترح تمرينًا قصيرًا."></textarea></label><div class="modal-actions"><button value="cancel" class="cancel">إلغاء</button><button id="saveSettings" value="default" class="save">حفظ التعليمات</button></div></form>
+  </dialog>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
