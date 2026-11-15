@@ -1,15 +1,22 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أُفُق | الدرس</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="lesson.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ofoq | Lesson Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lesson.css" />
 </head>
 <body>
-  <header><a href="index.html" class="brand"><span>أ</span> أُفُق</a><button onclick="window.close()">إغلاق النافذة ×</button></header>
-  <main id="lessonContent"><div class="loading">جارٍ فتح الدرس…</div></main>
+  <header>
+    <a href="index.html" class="brand"><span>O</span> Ofoq</a>
+    <button type="button" onclick="window.close(); setTimeout(() => { location.href = 'index.html'; }, 150);">Close Tab ×</button>
+  </header>
+  <main id="lessonContent">
+    <div class="loading">Loading lesson…</div>
+  </main>
   <script src="lesson.js"></script>
 </body>
 </html>
