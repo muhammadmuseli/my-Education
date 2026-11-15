@@ -13,16 +13,61 @@ function loadEnv() {
 }
 
 const config = loadEnv();
-const apiKey = config.GEMINI_API_KEY;
-const model = config.GEMINI_MODEL || 'gemini-3.6-flash';
+const apiKey = config.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+const primaryModel = config.GEMINI_MODEL || 'gemini-3.8-flash';
+const fallbackModels = [
+  primaryModel,
+  'gemini-3.8-flash-lite',
+  'gemini-3.8-pro',
+  'gemini-2.0-flash'
+];
 
 function send(res, status, body) {
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': 'http://127.0.0.1:5500',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
   });
   res.end(JSON.stringify(body));
+}
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function generateWithFallback(payload) {
+  let lastError = 'Gemini API request failed';
+  let lastStatus = 500;
+
+  for (const modelName of fallbackModels) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        return { ok: true, status: 200, text: data.candidates?.[0]?.content?.parts?.[0]?.text || '' };
+      }
+
+      lastStatus = response.status;
+      lastError = data.error?.message || lastError;
+
+      // If high demand (503) or rate limit (429), wait 1.5s and retry
+      if (response.status === 503 || response.status === 429 || /high demand|overloaded/i.test(lastError)) {
+        await sleep(1500 * attempt);
+        continue;
+      }
+      // If model not available/found, break inner loop and try next fallback model
+      break;
+    }
+  }
+
+  return { ok: false, status: lastStatus, error: lastError };
 }
 
 const server = http.createServer(async (req, res) => {
@@ -30,7 +75,7 @@ const server = http.createServer(async (req, res) => {
   if (req.url === '/api/health') {
     return send(res, apiKey ? 200 : 503, {
       ready: Boolean(apiKey),
-      model,
+      model: primaryModel,
       timestamp: new Date().toISOString()
     });
   }
@@ -48,15 +93,12 @@ const server = http.createServer(async (req, res) => {
       const { prompt, parts = [] } = JSON.parse(raw || '{}');
       if (!prompt) return send(res, 400, { error: 'Prompt is required' });
 
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, ...parts] }] })
+      const result = await generateWithFallback({
+        contents: [{ parts: [{ text: prompt }, ...parts] }]
       });
 
-      const data = await response.json();
-      if (!response.ok) return send(res, response.status, { error: data.error?.message || 'Gemini API request failed' });
-      send(res, 200, { text: data.candidates?.[0]?.content?.parts?.[0]?.text || '' });
+      if (!result.ok) return send(res, result.status, { error: result.error });
+      send(res, 200, { text: result.text });
     } catch (error) {
       send(res, 500, { error: error.message || 'Internal server error' });
     }

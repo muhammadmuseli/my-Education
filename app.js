@@ -4,7 +4,7 @@ const source = $('#sourceText');
 const result = $('#translationResult');
 const customPrompt = $('#customPrompt');
 const status = $('#connectionStatus');
-const aiBase = location.hostname === '127.0.0.1' || location.hostname === 'localhost'
+const aiBase = (location.hostname === '127.0.0.1' || location.hostname === 'localhost' || location.protocol === 'file:')
   ? 'http://127.0.0.1:3000/api'
   : '/.netlify/functions';
 
